@@ -20,9 +20,11 @@ public class SimpleTest {
 
         Node node = model.universe(0).time(0).createNode();
         node.setName("node0");
+
         root.addNodes(node);
 
         model.save(null);
+
 
     }
 

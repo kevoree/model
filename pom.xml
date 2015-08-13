@@ -9,7 +9,7 @@
     <name>Kevoree :: Model</name>
 
     <properties>
-        <kmf.version>4.19.1-SNAPSHOT</kmf.version>
+        <kmf.version>4.22.1-SNAPSHOT</kmf.version>
     </properties>
 
     <dependencies>
@@ -43,6 +43,7 @@
                         <configuration>
                             <metaModelFile>org.kevoree.mm</metaModelFile>
                             <js>true</js>
+                            <umd>true</umd>
                         </configuration>
                     </execution>
                 </executions>
