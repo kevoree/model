@@ -30,14 +30,14 @@ public class SimpleTest {
         root.addNodes(node);
 
         model.save(null);
-        
+
 
     }
 
     @Test
     public void loadModel() {
         final String str = "[\n" +
-                "  {\"@class\":\"org.kevoree.Model\",\"@uuid\":1,\"namespaces\":[5]},\n" +
+                "  {\"@root\":\"true\", \"@class\":\"org.kevoree.Model\",\"@uuid\":1,\"namespaces\":[5]},\n" +
                 "  {\"@class\":\"org.kevoree.Namespace\",\"@uuid\":5,\"name\":\"kevoree\",\"typeDefinitions\":[2],\"op_Model_namespaces\":[1]},\n" +
                 "  {\"@class\":\"org.kevoree.ComponentType\",\"@uuid\":2,\"name\":\"Ticker\",\"outputs\":[10],\"metaData\":[6],\"deployUnits\":[3],\"op_Namespace_typeDefinitions\":[5],\"dictionaryType\":[7]},\n" +
                 "  {\"@class\":\"org.kevoree.PortType\",\"@uuid\":10,\"name\":\"tick\",\"metaData\":[11],\"op_ComponentType_outputs\":[2]},\n" +
@@ -53,11 +53,11 @@ public class SimpleTest {
         model.connect(new KCallback() {
             public void on(Object o) {
                 final KevoreeView view = model.universe(0).time(1);
-                view.json().load(str, new KCallback<Model>() {
-                    public void on(Model model) {
+                view.json().load(str, new KCallback() {
+                    public void on(Object o) {
                         System.out.println("Model loaded");
                         KevoreeView view = (KevoreeView) model.manager().model().universe(0).time(1);
-                        view.json().save(model, new KCallback<String>() {
+                        view.json().saveRoot(new KCallback<String>() {
                             public void on(String s) {
                                 System.out.println(s);
                             }
