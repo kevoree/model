@@ -2,7 +2,6 @@ with version "6.0.0-SNAPSHOT"
 with kmfVersion "4.19.1-SNAPSHOT"
 
 class org.kevoree.NamedElement {
-// id
     att name: String
 }
 
@@ -19,8 +18,7 @@ class org.kevoree.Instance extends org.kevoree.NamedElement {
     ref dictionary:     org.kevoree.Dictionary
     ref typeDefinition: org.kevoree.TypeDefinition
 
-    ref* metaData:           org.kevoree.Value
-    ref* fragmentDictionary: org.kevoree.FragmentDictionary
+    ref* metaData: org.kevoree.Value
 }
 
 class org.kevoree.Node extends org.kevoree.Instance {
@@ -38,10 +36,12 @@ class org.kevoree.Component extends org.kevoree.Instance {
 
 class org.kevoree.Group extends org.kevoree.Instance {
     ref* nodes: org.kevoree.Node with opposite "groups"
+    ref* fragmentDictionaries: org.kevoree.FragmentDictionary
 }
 
 class org.kevoree.Channel extends org.kevoree.Instance {
     ref* ports: org.kevoree.Port with opposite "channels"
+    ref* fragmentDictionaries: org.kevoree.FragmentDictionary
 }
 
 class org.kevoree.Namespace extends org.kevoree.NamedElement {
@@ -49,7 +49,6 @@ class org.kevoree.Namespace extends org.kevoree.NamedElement {
 }
 
 class org.kevoree.TypeDefinition extends org.kevoree.NamedElement {
-// id
     att version:  String
     att abstract: Bool
 
@@ -59,7 +58,9 @@ class org.kevoree.TypeDefinition extends org.kevoree.NamedElement {
     ref* deployUnits: org.kevoree.DeployUnit
 }
 
-class org.kevoree.PortType extends org.kevoree.NamedElement {}
+class org.kevoree.PortType extends org.kevoree.NamedElement {
+    ref* metaData: org.kevoree.Value
+}
 
 class org.kevoree.ComponentType extends org.kevoree.TypeDefinition {
     ref* inputs:  org.kevoree.PortType
@@ -80,21 +81,23 @@ class org.kevoree.Dictionary {
     ref* values : org.kevoree.Value
 }
 
-class org.kevoree.FragmentDictionary extends org.kevoree.Dictionary, org.kevoree.NamedElement {}
+class org.kevoree.FragmentDictionary extends org.kevoree.Dictionary {
+    ref node: org.kevoree.Node
+}
 
 class org.kevoree.Value extends org.kevoree.NamedElement {
     att value: String
 }
 
 class org.kevoree.DictionaryType {
-    ref* attributes: org.kevoree.DictionaryAttribute
+    ref* attributes: org.kevoree.AttributeType
 }
 
 enum org.kevoree.DataType {
-    list, byte, short, bool, int, button, decimal, string
+    STRING, BOOLEAN, INTEGER, DECIMAL, LIST, CHAR
 }
 
-class org.kevoree.DictionaryAttribute extends org.kevoree.TypedElement {
+class org.kevoree.AttributeType extends org.kevoree.TypedElement {
     att optional:          Bool
     att datatype:          org.kevoree.DataType
     att defaultValue:      String
@@ -106,12 +109,10 @@ class org.kevoree.TypedElement extends org.kevoree.NamedElement {
 }
 
 class org.kevoree.DeployUnit extends org.kevoree.NamedElement {
-// id
     att version: String
-// id
     att hashcode: String
 
-    ref metaData: org.kevoree.Value
+    ref* metaData: org.kevoree.Value
 
     ref* requiredLibs: org.kevoree.DeployUnit
 }

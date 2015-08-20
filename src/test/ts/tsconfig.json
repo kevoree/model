@@ -4,11 +4,10 @@
         "target": "es5",
         "module": "commonjs",
         "isolatedModules": false,
-        "jsx": "react",
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
         "declaration": false,
-        "noImplicitAny": false,
+        "noImplicitAny": true,
         "removeComments": true,
         "noLib": false,
         "preserveConstEnums": true,
@@ -21,7 +20,11 @@
         "./../../../target/classes/model.d.ts"
     ],
     "files": [
+        "./src/FileCDD.ts",
+        "./src/WebSocketCDD.ts",
         "./src/test.ts",
+        "./typings/node/node.d.ts",
+        "./typings/ws/ws.d.ts",
         "./../../../target/classes/model.d.ts"
     ]
 }
