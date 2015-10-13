@@ -6,83 +6,91 @@ class org.kevoree.NamedElement {
 }
 
 class org.kevoree.Model {
-    ref* nodes:      org.kevoree.Node
-    ref* groups:     org.kevoree.Group
-    ref* channels:   org.kevoree.Channel
-    ref* namespaces: org.kevoree.Namespace
+    rel nodes:      org.kevoree.Node
+    rel groups:     org.kevoree.Group
+    rel channels:   org.kevoree.Channel
+    rel namespaces: org.kevoree.Namespace
 }
 
 class org.kevoree.Instance extends org.kevoree.NamedElement {
     att started : Bool
 
-    ref dictionary:     org.kevoree.Dictionary
-    ref typeDefinition: org.kevoree.TypeDefinition
+    rel dictionary:     org.kevoree.Dictionary      with maxBound 1
+    rel typeDefinition: org.kevoree.TypeDefinition  with maxBound 1
 
-    ref* metaData: org.kevoree.Value
+    rel metaData: org.kevoree.Value
 }
 
 class org.kevoree.Node extends org.kevoree.Instance {
-    ref* host:       org.kevoree.Node  with opposite "children"
-    ref* groups:     org.kevoree.Group with opposite "nodes"
-    ref* children:   org.kevoree.Node  with opposite "host"
-    ref* networks:   org.kevoree.NetworkInfo
-    ref* components: org.kevoree.Component
+    rel host:       org.kevoree.Node  with opposite "children"
+    rel groups:     org.kevoree.Group with opposite "nodes"
+    rel children:   org.kevoree.Node  with opposite "host"
+    rel networks:   org.kevoree.NetworkInfo
+    rel components: org.kevoree.Component
 }
 
 class org.kevoree.Component extends org.kevoree.Instance {
-    ref* inputs:  org.kevoree.Port
-    ref* outputs: org.kevoree.Port
+    rel inputs:  org.kevoree.Port
+    rel outputs: org.kevoree.Port
 }
 
-class org.kevoree.Group extends org.kevoree.Instance {
-    ref* nodes: org.kevoree.Node with opposite "groups"
-    ref* fragmentDictionaries: org.kevoree.FragmentDictionary
+class org.kevoree.Group extends org.kevoree.Instance {    
+    rel nodes: org.kevoree.Node with opposite "groups"
+    rel fragmentDictionaries: org.kevoree.FragmentDictionary
 }
 
 class org.kevoree.Channel extends org.kevoree.Instance {
-    ref* ports: org.kevoree.Port with opposite "channels"
-    ref* fragmentDictionaries: org.kevoree.FragmentDictionary
+    att isRemote: Bool
+
+    rel ports: org.kevoree.Port with opposite "channels"
+    rel fragmentDictionaries: org.kevoree.FragmentDictionary
 }
 
 class org.kevoree.Namespace extends org.kevoree.NamedElement {
-    ref* typeDefinitions: org.kevoree.TypeDefinition
+    rel typeDefinitions: org.kevoree.TypeDefinition
 }
 
 class org.kevoree.TypeDefinition extends org.kevoree.NamedElement {
     att version:  String
     att abstract: Bool
 
-    ref dictionaryType: org.kevoree.DictionaryType
+    rel dictionaryType: org.kevoree.DictionaryType  with maxBound 1
 
-    ref* metaData:    org.kevoree.Value
-    ref* deployUnits: org.kevoree.DeployUnit
+    rel metaData:    org.kevoree.Value
+    rel deployUnits: org.kevoree.DeployUnit
 }
 
 class org.kevoree.PortType extends org.kevoree.NamedElement {
-    ref* metaData: org.kevoree.Value
+    rel metaData: org.kevoree.Value
 }
 
 class org.kevoree.ComponentType extends org.kevoree.TypeDefinition {
-    ref* inputs:  org.kevoree.PortType
-    ref* outputs: org.kevoree.PortType
+    att remote : Bool
+
+    rel inputs:  org.kevoree.PortType
+    rel outputs: org.kevoree.PortType
 }
 
-class org.kevoree.GroupType extends org.kevoree.TypeDefinition {}
+class org.kevoree.GroupType extends org.kevoree.TypeDefinition {
+    att remote : Bool
+}
 
 class org.kevoree.NodeType extends org.kevoree.TypeDefinition {}
 
-class org.kevoree.ChannelType extends org.kevoree.TypeDefinition {}
+class org.kevoree.ChannelType extends org.kevoree.TypeDefinition {
+    att local : Bool
+}
 
 class org.kevoree.Port extends org.kevoree.NamedElement {
-    ref* channels: org.kevoree.Channel with opposite "ports"
+    rel channels: org.kevoree.Channel with opposite "ports"
 }
 
 class org.kevoree.Dictionary {
-    ref* values : org.kevoree.Value
+    rel values : org.kevoree.Value
 }
 
 class org.kevoree.FragmentDictionary extends org.kevoree.Dictionary {
-    ref node: org.kevoree.Node
+    rel node: org.kevoree.Node  with maxBound 1
 }
 
 class org.kevoree.Value extends org.kevoree.NamedElement {
@@ -90,11 +98,29 @@ class org.kevoree.Value extends org.kevoree.NamedElement {
 }
 
 class org.kevoree.DictionaryType {
-    ref* attributes: org.kevoree.AttributeType
+    rel attributes: org.kevoree.AttributeType
 }
 
-enum org.kevoree.DataType {
-    STRING, BOOLEAN, INTEGER, DECIMAL, LIST, CHAR
+
+class org.kevoree.DataType {}
+class org.kevoree.StringDataType extends org.kevoree.DataType {
+    att multiline: Bool
+}
+class org.kevoree.BooleanDataType extends org.kevoree.DataType {}
+class org.kevoree.IntegerDataType extends org.kevoree.DataType {
+    att min: Int
+    att max: Int
+}
+class org.kevoree.DecimalDataType extends org.kevoree.DataType {
+    att min: Double
+    att max: Double
+}
+class org.kevoree.ListDataType extends org.kevoree.DataType {
+
+}
+class org.kevoree.CharDataType extends org.kevoree.DataType {}
+class org.kevoree.ButtonDataType extends org.kevoree.DataType {
+    att code: String
 }
 
 class org.kevoree.AttributeType extends org.kevoree.TypedElement {
@@ -105,18 +131,18 @@ class org.kevoree.AttributeType extends org.kevoree.TypedElement {
 }
 
 class org.kevoree.TypedElement extends org.kevoree.NamedElement {
-    ref* genericTypes: org.kevoree.TypedElement
+    rel genericTypes: org.kevoree.TypedElement
 }
 
 class org.kevoree.DeployUnit extends org.kevoree.NamedElement {
     att version: String
     att hashcode: String
 
-    ref* metaData: org.kevoree.Value
+    rel metaData: org.kevoree.Value
 
-    ref* requiredLibs: org.kevoree.DeployUnit
+    rel requiredLibs: org.kevoree.DeployUnit
 }
 
 class org.kevoree.NetworkInfo extends org.kevoree.NamedElement {
-    ref* values: org.kevoree.Value
+    rel values: org.kevoree.Value
 }
