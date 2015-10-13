@@ -30,7 +30,7 @@ public class SimpleTest {
         root.addNodes(node);
 
         model.save(null);
-        
+
 
     }
 
