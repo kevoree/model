@@ -34,7 +34,7 @@ class org.kevoree.Component extends org.kevoree.Instance {
     rel outputs: org.kevoree.Port
 }
 
-class org.kevoree.Group extends org.kevoree.Instance {    
+class org.kevoree.Group extends org.kevoree.Instance {
     rel nodes: org.kevoree.Node with opposite "groups"
     rel fragmentDictionaries: org.kevoree.FragmentDictionary
 }
@@ -62,6 +62,7 @@ class org.kevoree.TypeDefinition extends org.kevoree.NamedElement {
 
 class org.kevoree.PortType extends org.kevoree.NamedElement {
     rel metaData: org.kevoree.Value
+    // add message types: MessagePack, ProtoBuf, JsonSchema, Raw...
 }
 
 class org.kevoree.ComponentType extends org.kevoree.TypeDefinition {
